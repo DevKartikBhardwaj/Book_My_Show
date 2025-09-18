@@ -1,6 +1,5 @@
 package com.example.Book_My_Show.Controller;
 
-import com.example.Book_My_Show.Convertors.TheaterConvertor;
 import com.example.Book_My_Show.EntryDTOs.TheaterEntryDTO;
 import com.example.Book_My_Show.Service.TheaterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("theater")
+@RequestMapping("/theater")
 public class TheaterController {
 
     @Autowired
