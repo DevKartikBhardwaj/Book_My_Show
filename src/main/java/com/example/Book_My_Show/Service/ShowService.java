@@ -5,6 +5,7 @@ import com.example.Book_My_Show.EntryDTOs.ShowEntryDTO;
 import com.example.Book_My_Show.Genres.SeatType;
 import com.example.Book_My_Show.Models.*;
 import com.example.Book_My_Show.Repository.MovieRepository;
+import com.example.Book_My_Show.Repository.ShowRepository;
 import com.example.Book_My_Show.Repository.TheaterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class ShowService {
     @Autowired
     TheaterRepository theaterRepository;
 
+    @Autowired
+    ShowRepository showRepository;
+
     public String addShow(ShowEntryDTO showEntryDTO) {
 
         // Create a showEntity
@@ -34,10 +38,14 @@ public class ShowService {
         // Setting the attribute of foreignKey
         show.setMovie(movie);
         show.setTheater(theater);
+        show.setShowDate(showEntryDTO.getLocalDate());
+        show.setShowTime(showEntryDTO.getLocalTime());
 
         // Pending attributes: the listOfShowSeatsEntity
         List<ShowSeat> showSeatList = createShowSeatEntity(showEntryDTO, show);
         show.setListOfShowSeats(showSeatList);
+        show = showRepository.save(show);
+
 
         // Update the parent entities
         List<Show> showList = movie.getShowList();
@@ -58,16 +66,16 @@ public class ShowService {
         // Now the goal is to create the ShowSeatEntity
         // We need to set its attributes
         Theater theater = show.getTheater();
-        List<TheaterSeats> theaterSeatEntityList = theater.getTheaterSeatsList();
+        List<TheaterSeats> theaterSeats = theater.getTheaterSeatsList();
         List<ShowSeat> seatList = new ArrayList<>();
 
-        for (TheaterSeats theaterSeats : theaterSeatEntityList) {
+        for(TheaterSeats theaterSeats1 : theaterSeats){
             ShowSeat showSeat = new ShowSeat();
 
-            showSeat.setSeatNumber(Integer.parseInt(theaterSeats.getSeatNumber()));
-            showSeat.setSeatType(theaterSeats.getSeatType());
+            showSeat.setSeatNumber(theaterSeats1.getSeatNumber());
+            showSeat.setSeatType(theaterSeats1.getSeatType());
 
-            if (theaterSeats.getSeatType().equals(SeatType.CLASSIC))
+            if(theaterSeats1.getSeatType().equals(SeatType.CLASSIC))
                 showSeat.setPrice(showEntryDTO.getClassSeatPrice());
             else
                 showSeat.setPrice(showEntryDTO.getPremiumSeatPrice());

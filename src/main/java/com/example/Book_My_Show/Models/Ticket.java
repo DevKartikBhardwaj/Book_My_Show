@@ -13,6 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Ticket")
@@ -27,6 +28,8 @@ public class Ticket {
 
 
     private LocalTime showTime;
+
+    private String bookedSeat;
 
     private LocalDate showDate;
 
